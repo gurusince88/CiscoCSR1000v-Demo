@@ -1,0 +1,2 @@
+[csr1000v]
+192.168.1.171 ansible_user=cisco ansible_password=cisco ansible_connection=network_cli ansible_network_os=cisco.ios.ios ansible_become=yes ansible_become_method=enable host_key_checking=False deprecation_warnings=False interpreter_python=/usr/local/bin/python3

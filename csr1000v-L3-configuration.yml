@@ -1,0 +1,103 @@
+---
+- name: Configure CSR 1000v Switches
+  hosts: csr1000v-1a, csr1000v-2a
+  gather_facts: no
+  tasks:
+    - name: Enable OSPF on csr1000v-1a
+      cisco.ios.ios_config:
+        lines:
+          - interface GigabitEthernet 2
+          - ip address 172.16.1.1 255.255.255.0
+          - no shu
+          - router ospf 1
+          - network 0.0.0.0 255.255.255.255 area 0
+        save_when: always
+      delegate_to: csr1000v-1a
+
+    - name: Enable OSPF on csr1000v-2a
+      cisco.ios.ios_config:
+        lines:
+          - interface GigabitEthernet 2
+          - ip address 192.168.1.1 255.255.255.0
+          - no shu
+          - router ospf 1
+          - network 0.0.0.0 255.255.255.255 area 0
+        save_when: always
+      delegate_to: csr1000v-2a
+
+    - name: Enable DHCP on csr1000v-1a (172)
+      cisco.ios.ios_config:
+        lines:
+          - ip dhcp pool 172-dhcp-range
+          - network 172.16.1.0 255.255.255.0
+          - default-router 172.16.1.1
+          - dns-server 8.8.8.8 8.8.4.4
+          - lease 1 0 0
+          - ip dhcp excluded-address 172.16.1.1 172.16.1.10
+        save_when: always
+      delegate_to: csr1000v-1a
+
+    - name: Enable DHCP on csr1000v-2a (192)
+      cisco.ios.ios_config:
+        lines:
+          - ip dhcp pool 192-dhcp-range
+          - network 192.168.1.0 255.255.255.0
+          - default-router 192.168.1.1
+          - dns-server 8.8.8.8 8.8.4.4
+          - lease 1 0 0
+          - ip dhcp excluded-address 192.168.1.1 192.168.1.10
+        save_when: always
+      delegate_to: csr1000v-2a
+
+    - name: Show IP interface brief
+      ios_command:
+        commands: "show ip interface brief"
+      register: show_ip_int_brief
+      
+    - name: Show IP OSPF neighbor
+      ios_command:
+        commands: "show ip ospf neighbor"
+      register: show_ip_ospf_neighbor
+      
+    - name: Wait for 45 seconds
+      pause:
+       seconds: 45
+       
+    - name: Show IP DHCP pool
+      ios_command:
+        commands: "show ip dhcp pool"
+      register: show_ip_dhcp_pool
+      
+    - name: Show IP DHCP binding
+      ios_command:
+        commands: "show ip dhcp binding"
+      register: show_ip_dhcp_binding
+      
+    - name: Print results
+      debug:
+        var: item.stdout_lines
+      with_items:
+        - "{{ show_ip_int_brief }}"
+        - "{{ show_ip_ospf_neighbor }}"
+        - "{{ show_ip_dhcp_pool }}"
+        - "{{ show_ip_dhcp_binding }}"
+        
+#     - name: Enable NAT on csr1000v-1a
+#       cisco.ios.ios_config:
+#         lines:
+#           - interface GigabitEthernet 1
+#           - ip nat outside
+#           - negotiation auto
+#           - no mop enabled
+#           - lease 1 0 0
+#           - no mop sysid
+#           - interface GigabitEthernet 2
+#           - ip nat inside
+#           - negotiation auto
+#           - no mop enabled
+#           - no mop sysid
+#           - ip nat inside source list 1 interface GigabitEthernet1 overload
+#           - access-list 1 permit any
+#         save_when: always
+#       delegate_to: csr1000v-1a
+

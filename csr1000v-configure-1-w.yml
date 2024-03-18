@@ -1,0 +1,34 @@
+---
+- name: Configure Cisco CSR1000v Routers
+  hosts: csr1000v
+  gather_facts: yes
+  vars:
+    new_password: cisco
+  tasks:
+    - name: Create user
+      cisco.ios.ios_user:
+        name: infra
+        nopassword: true
+        sshkey: 
+        - "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: set multiple users to privilege level 15
+      cisco.ios.ios_user:
+        aggregate:
+        - name: infra
+        privilege: 15
+        state: present
+
+    - name: set user view/role
+      cisco.ios.ios_user:
+        name: infra
+        view: network-operator
+        state: present
+
+    - name: Change Password for User netop
+      cisco.ios.ios_user:
+        name: infra
+        configured_password: '{{ new_password }}'
+        update_password: always
+        state: present

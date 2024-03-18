@@ -1,0 +1,23 @@
+---
+- name: Configure Cisco CSR1000v Routers
+  hosts: csr1000v
+  gather_facts: no
+
+  tasks:
+    - name: Create user
+      cisco.ios.ios_user:
+        name: infra
+        password: infra_password
+        privilege: 15
+      become: yes
+
+    - name: Configure DNS
+      cisco.ios.ios_system:
+        domain_name_servers:
+          - 8.8.8.8
+      become: yes
+
+    - name: Configure NTP
+      ios_ntp:
+        server: 0.us.pool.ntp.org
+      become: yes

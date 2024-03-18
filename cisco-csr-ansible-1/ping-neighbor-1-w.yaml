@@ -1,0 +1,10 @@
+---
+- name: Ping a host
+  hosts: csr1000v
+  gather_facts: no
+  vars:
+    ping_host: 192.168.1.174  
+  tasks:
+    - name: Ping the host
+      cisco.ios.ios_ping:
+        dest: "{{ ping_host }}"

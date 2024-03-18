@@ -1,0 +1,7 @@
+[switches]
+cisco-csr1000v-1 ansible_host=192.168.1.171 ansible_user=cisco ansible_password=cisco ansible_connection=ssh
+cisco-csr1000v-2 ansible_host=192.168.1.172 ansible_user=cisco ansible_password=cisco ansible_connection=ssh
+
+[csr1000v:vars]
+ansible_network_os=ios
+ansible_connection_network_cli=netmiko

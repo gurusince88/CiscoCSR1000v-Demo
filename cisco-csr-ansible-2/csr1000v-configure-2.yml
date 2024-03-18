@@ -1,0 +1,62 @@
+- name: Configure Cisco CSR1000v Routers
+  hosts: csr1000v
+  gather_facts: no
+
+  vars:
+    username: infra_dev_1
+    password: NetApp!234
+    hostname: "cisco-csr1000v-4"
+    banner: "#################### Unauthorized access is prohibited.  ####################"
+    dns_server: 8.8.8.8
+    domain_name: "example.com"
+    ntp_server: time-a-g.nist.gov
+
+  tasks:
+  # - name: Gather only the config and default facts
+  #   cisco.ios.ios_facts:
+  #     gather_network_resources: 
+  #     - all
+  #     available_network_resources: true
+  #     gather_subset:
+  #     - all
+  #   register: results
+  # - debug: var=results
+
+  - name: create a new user
+    ios_user:
+      name: "{{ username }}"
+      configured_password: "{{ password }}"
+      password_type: password
+      privilege: 15
+      #update_password: "on_create"
+    no_log: true
+    register: output
+
+  - name: Configure login banner
+    ios_banner:
+      banner: login
+      text: "{{ banner }}"
+    register: output
+
+  - name: Configure hostname
+    ios_config:
+      lines:
+      - hostname {{ hostname }}
+    register: output
+
+  # - name: Configure NTP server (worked)
+  #   ios_config:
+  #     lines:
+  #     - ntp server {{ ntp_server }}
+  #   register: output
+
+  # - name: Configure DNS server (worked)
+  #   ios_config:
+  #     lines:
+  #     - ip name-server {{ dns_server }}
+  #   register: output
+
+
+  - name: Save configuration
+    ios_command:
+      commands: write memory

@@ -1,0 +1,6 @@
+[all:vars]
+ansible_network_os=cisco.ios.ios
+ansible_user=cisco 
+ansible_password=cisco
+
+192.168.1.171

@@ -1,0 +1,18 @@
+[all:vars]
+ansible_network_os=cisco.ios.ios
+#ansible_network_os=iosxr
+ansible_connection=network_cli
+##ansible_connection=paramiko
+#ansible_connection=netmiko
+#ansible_python_interpreter="/usr/bin/env python3"
+
+[csr1000v]
+cisco-csr1000v-4 ansible_host=192.168.1.174 ansible_user=cisco ansible_password=cisco
+
+[csr1000:vars]
+#ansible_network_os=cisco_iosxr
+#ansible_connection=network_cli
+#ansible_connection=paramiko
+#ansible_become=yes
+#ansible_become_method=enable
+#ansible_become_password=secret

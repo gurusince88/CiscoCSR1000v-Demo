@@ -1,0 +1,15 @@
+[all:vars]
+ansible_connection=network_cli 
+ansible_network_os=cisco.ios.ios 
+ansible_become=yes 
+ansible_become_method=enable
+
+[csr1000v]
+#192.168.1.171 
+#192.168.1.172 
+#192.168.1.173 
+192.168.1.174 
+
+[csr1000v:vars]
+ansible_user=cisco 
+ansible_password=cisco 

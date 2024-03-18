@@ -1,0 +1,15 @@
+---
+- name: Cisco version example
+  hosts: csr1000v
+  gather_facts: no
+
+  tasks:
+    - name: run show version on the routers
+      ios_commands:
+        commands: show version | incl Version
+      #Register: localhost
+      Register: print output
+
+    - name: print output
+        debug:
+          var: output.stdout_lines

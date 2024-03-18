@@ -1,0 +1,9 @@
+---
+- name: Configure Cisco CSR1000v Routers
+  hosts: csr1000v
+  gather_facts: no
+
+  tasks:
+    - name: Test reachability to 198.51.100.251 using default vrf
+      cisco.ios.ios_ping:
+        dest: 192.168.1.171

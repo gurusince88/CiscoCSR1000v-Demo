@@ -1,0 +1,13 @@
+- name: Gather IOS facts
+  hosts: csr1000v
+  gather_facts: yes
+  connection: network_cli
+  vars:
+    ansible_network_os: cisco.ios.ios
+  tasks:
+  - name: Get IOS facts
+    cisco.ios.ios_facts:
+    register: ios_facts
+  - name: Print IOS facts
+    debug:
+      var: ios_facts

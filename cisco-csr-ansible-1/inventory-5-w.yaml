@@ -1,0 +1,27 @@
+all:
+  vars:
+    ansible_connection: network_cli
+    ansible_network_os: cisco.ios.ios
+    gather_facts: false
+    ansible_become: false
+    ansible_become_method: enable
+    ansible_user: cisco
+    ansible_password: cisco
+
+csr1000v:
+  children:
+    csr1000v-ctl:
+    csr1000v-ral:
+
+csr1000v-ctl:
+  hosts:
+    192.168.1.171:
+    192.168.1.172:
+
+csr1000v-ral:
+  hosts:
+    192.168.1.173:
+    192.168.1.174:
+  vars:
+    ansible_user: cisco
+    ansible_password: cisco
