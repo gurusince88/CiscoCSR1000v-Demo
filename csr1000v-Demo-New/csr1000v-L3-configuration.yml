@@ -1,0 +1,29 @@
+---
+- name: Configure CSR 1000v Switches
+  hosts: csr1000v-1a, csr1000v-2a
+  gather_facts: no
+  tasks:
+    - name: Enable DHCP on csr1000v-1a (172)
+      cisco.ios.ios_config:
+        lines:
+          - ip dhcp pool 172-dhcp-range
+          - network 172.16.1.0 255.255.255.0
+          - default-router 172.16.1.1
+          - dns-server 8.8.8.8 8.8.4.4
+          - lease 1 0 0
+          - ip dhcp excluded-address 172.16.1.1 172.16.1.10
+        save_when: never
+      delegate_to: csr1000v-1a
+
+    - name: Enable DHCP on csr1000v-2a (192)
+      cisco.ios.ios_config:
+        lines:
+          - ip dhcp pool 192-dhcp-range
+          - network 192.168.1.0 255.255.255.0
+          - default-router 192.168.1.1
+          - dns-server 8.8.8.8 8.8.4.4
+          - lease 1 0 0
+          - ip dhcp excluded-address 192.168.1.1 192.168.1.10
+        save_when: never
+      delegate_to: csr1000v-2a
+

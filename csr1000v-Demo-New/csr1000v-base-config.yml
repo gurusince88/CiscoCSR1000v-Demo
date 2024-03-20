@@ -1,0 +1,37 @@
+---
+- name: Configure Cisco CSR1000v Routers
+  hosts: csr1000v
+  gather_facts: no
+
+  tasks:
+    - name: Create user
+      cisco.ios.ios_user:
+        name: infra
+        configured_password: infra_password
+        privilege: 15
+      become: yes
+
+    - name: Configure DNS
+      cisco.ios.ios_system:
+        name_servers:
+          - 8.8.8.8
+      become: yes
+
+    - name: Configure NTP
+      ios_ntp:
+        server: 0.us.pool.ntp.org
+      become: yes
+
+    - name: Adding MOTD Banner
+      cisco.ios.ios_banner:
+        banner: motd
+        multiline_delimiter: $
+        text: This is the MOTD banner we added via Ansible
+        state: present
+
+    - name: Adding login Banner
+      cisco.ios.ios_banner:
+        banner: login
+        multiline_delimiter: $
+        text: This is the login banner we added via Ansible
+        state: present
